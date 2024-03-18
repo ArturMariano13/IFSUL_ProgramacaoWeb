@@ -1,0 +1,70 @@
+.App {
+  display: flex;
+  text-align: center;
+  margin: 0;
+  width: 100%;
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+button{
+  background-color: #2196F3;
+  border: none;
+  color: #fff;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.5s ease;
+}
+
+button:hover{
+  background-color: #75a9f8;
+  cursor:pointer;
+}
+
+label{
+  display: block;
+  font-size: 12pt;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+input{
+  display: block;
+  box-sizing:border-box;
+  margin: 8px
+}
+
+.dados {
+  margin: auto;
+  padding: 20px;
+  border: 2px solid #201d1d;
+  border-radius: 5px;
+  max-width: 400px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f2f2f2;
+}
+
+.dados p {
+  margin: 10px 0;
+}
+
+.dados b {
+  font-weight: bold;
+}
+
+
+
