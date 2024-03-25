@@ -1,0 +1,47 @@
+body {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  margin: 20px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.botao {
+  display: grid;
+  place-items: center;
+  margin: 15px;
+}
+
+button {
+  background-color: #116616;
+  border: none;
+  color: #fff;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.5s ease;
+}
+
+button:hover{
+  background-color: rgb(20, 121, 20);
+  opacity: 0.9;
+}
+
+.tabela, th, td{
+  border-collapse: collapse; /*define a separação entre as bordar*/
+  padding: 10px;
+  text-align: left;
+}
+th{
+  background-color: lightgray;
+}
