@@ -7,6 +7,7 @@ import Login from "./Login";
 import Sobre from "./Sobre";
 import Salario from "./Salario";
 import CalculaSalario from "./CalculaSalario";
+import Imc from "./Imc";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
       {
         path : "salario-calculado",
         element : <CalculaSalario/>
+      },
+      {
+        path : "imc",
+        element : <Imc/>
       }
     ]
   }

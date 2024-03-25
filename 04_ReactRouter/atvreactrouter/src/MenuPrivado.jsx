@@ -18,7 +18,13 @@ const MenuPrivado = () => {
                             <NavLink className="nav-link" exact="true" to="usuario">Usuário</NavLink>
                             </li>
                             <li class="nav-item">
+                            <NavLink className="nav-link" exact="true" to="sobre">Sobre</NavLink>
+                            </li>
+                            <li class="nav-item">
                             <NavLink className="nav-link" exact="true" to="salario">Salário</NavLink>
+                            </li>
+                            <li class="nav-item">
+                            <NavLink className="nav-link" exact="true" to="imc">IMC</NavLink>
                             </li>
                             <li class="nav-item">
                             <NavLink className="nav-link" exact="true" to="login">Logout</NavLink>
