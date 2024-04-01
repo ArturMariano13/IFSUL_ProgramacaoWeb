@@ -1,0 +1,9 @@
+.App {
+  text-align: center;
+}
+
+.container {
+    display: grid;
+    place-items: center;
+    height: 500px;
+}
