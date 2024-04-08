@@ -1,0 +1,324 @@
+-- Criar o projeto com o template pwa
+
+npx create-react-app eshop-frontend --template cra-template-pwa
+
+-- instalar as dependências
+
+npm i @popperjs/core bootstrap bootstrap-icons react-router-dom
+
+-- crie o arquivo .env no mesmo diretório do package.json com o conteúdo
+
+REACT_APP_ENDERECO_API=http://127.0.0.1:3002
+
+-- criar o componente home dentro de componentes/telas
+
+const Home = () => (
+    <div>
+        <h1>eShop</h1>
+    </div>
+);
+export default Home;
+
+-- criar o menu.jsx
+
+import { NavLink, Outlet } from 'react-router-dom';
+
+const Menu = () => {
+
+    return (
+        <div>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="container-fluid">
+                    <NavLink className="navbar-brand" aria-current="page" exact to="/">eShop</NavLink>
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li className="nav-item">
+                                <NavLink className="nav-link active" aria-current="page" exact to="/">Home</NavLink>
+                            </li>
+
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="/" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Manutenções
+                                </a>
+                                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><NavLink className="dropdown-item" exact to="categorias">Categorias</NavLink></li>                                    
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <Outlet />
+        </div>
+    )
+};
+
+export default Menu;
+
+
+
+
+
+
+
+-- Modificar o app.jsx
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '@popperjs/core/dist/cjs/popper.js'
+import 'bootstrap/dist/js/bootstrap.min.js'
+import 'bootstrap-icons/font/bootstrap-icons.css'
+import Menu from './componentes/Menu'
+import Home from './componentes/telas/Home'
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Menu />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      }      
+    ]
+  }
+
+]);
+
+function App() {
+
+  return (
+    <RouterProvider router={router} />
+  );
+}
+
+export default App;
+
+-- criar o compomente Alerta dentro de componentes/comuns
+
+import { useState, useEffect } from "react";
+
+const Alerta = ({ alerta }) => {
+
+    const [exibir, setExibir] = useState(false);
+
+    useEffect(() => {
+        setExibir(true);
+        setTimeout(() => {
+            setExibir(false);
+        }, 2000);
+    }, [alerta]);
+
+    var classe = '';
+    if (alerta.status === 'error') {
+        classe = 'alert alert-danger'
+    } else {
+        classe = 'alert alert-primary'
+    }
+
+    return (
+        <div>
+            {(alerta.message.length > 0 && exibir) &&
+                <div className={classe} role="alert">
+                    {alerta.message}
+                </div>
+            }
+        </div>
+    )
+
+}
+
+export default Alerta;
+
+
+
+
+
+-- Criar o CategoriaServico.jsx dentro de /servicos
+
+export const getCategoriasAPI = async () => {
+    const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/categoria`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+    const data = await response.json()
+    return data;
+}
+
+export const getCategoriaPorCodigoAPI = async codigo => {
+    const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/categoria/${codigo}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    const data = await response.json();
+    return data;
+}
+
+export const deleteCategoriaPorCodigoAPI = async codigo => {
+    const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/categoria/${codigo}`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    const data = await response.json();
+    return data;
+}
+
+export const cadastraCategoriaAPI = async (objeto, metodo) => {
+    const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/categoria`, {
+        method: metodo,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(objeto),
+    })
+    const data = await response.json();
+    return data;
+}
+
+-- Criar o CategoriaContext.jsx dentro de componentes\telas\categoria
+
+import React from 'react';
+
+const CategoriaContext = React.createContext();
+ 
+export default CategoriaContext;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Criar o componente Categoria.jsx dentro da pasta componentes/telas/predio
+
+import { useState, useEffect } from 'react';
+import CategoriaContext from './CategoriaContext';
+import {
+    getCategoriasAPI, getCategoriaPorCodigoAPI,
+    deleteCategoriaPorCodigoAPI, cadastraCategoriaAPI
+} from '../../../servicos/CategoriaServico';
+
+function Categoria() {
+
+    const [alerta, setAlerta] = useState({ status: "", message: "" });
+    const [listaObjetos, setListaObjetos] = useState([]);
+
+    const recuperaCategorias = async () => {
+        setListaObjetos(await getCategoriasAPI());
+    }
+
+    const remover = async codigo => {
+        if (window.confirm('Deseja remover este objeto?')) {
+            let retornoAPI = await deleteCategoriaPorCodigoAPI(codigo);
+            setAlerta({ status: retornoAPI.status, message: retornoAPI.message })
+            recuperaCategorias();
+        }
+    }
+
+    useEffect(() => {
+        recuperaCategorias();
+    }, []);
+
+    return (
+        <CategoriaContext.Provider value={
+            {
+                alerta, setAlerta,
+                listaObjetos,
+                remover
+            }
+        }>
+        </CategoriaContext.Provider>
+    );
+}
+
+export default Categoria;
+
+-- Criar o componente Tabela 
+
+import { useContext } from 'react'
+import CategoriaContext from './CategoriaContext';
+import Alerta from '../../comuns/Alerta';
+
+function Tabela() {
+
+    const { alerta, listaObjetos, remover } = useContext(CategoriaContext);
+
+    return (
+        <div style={{ padding: '20px' }}>
+            <h1>Categorias</h1>
+            <Alerta alerta={alerta} />
+            <button type="button" className="btn btn-primary">
+                Novo <i className="bi bi-file-earmark-plus"></i>
+            </button>
+            {listaObjetos.length === 0 && <h1>Nenhuma categoria encontrada</h1>}
+            {listaObjetos.length > 0 && (
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" style={{ textAlign: 'center' }}>Ações</th>
+                            <th scope="col">Código</th>
+                            <th scope="col">Nome</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listaObjetos.map(objeto => (
+                            <tr key={objeto.codigo}>
+                                <td align="center">
+                                    <button className="btn btn-info">
+                                        <i className="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button className="btn btn-danger" title="Remover"
+                                        onClick={() => { remover(objeto.codigo); }}>
+                                        <i className="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                                <td>{objeto.codigo}</td>
+                                <td>{objeto.nome}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+        </div>
+    )
+}
+
+export default Tabela;
+
+-- Chamar a Tabela no categoria.jsx
+
+		<CategoriaContext.Provider value={
+            {
+                alerta, setAlerta,
+                listaObjetos,
+                remover
+            }
+        }>
+            <Tabela/>
+        </CategoriaContext.Provider>
+
+-- adicionar o App.jsx a rota para o Predio
+
+	  {
+        path : "categorias",
+        element : <Categoria/>
+      }   
